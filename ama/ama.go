@@ -308,56 +308,23 @@ func AA(ad string, yr string, sw string) Redrec {
 
 //ABor - AMA begin of record
 func ABor(dt string) string {
-	//fmt.Println("Record Descriptor Word:", dt[0:8])
-	//fmt.Println("Hexadecimal Identifier:", dt[8:10])
-	//fmt.Println("Structure Identifier Code:", dt[10:14])
-	//fmt.Println("Call Type:", dt[14:18])
-	//fmt.Println("Recording Office Type:", dt[18:22])
-	//fmt.Println("Recording Office Identification:", dt[22:30])
-	//fmt.Println("Date Datalink Recording Started:", dt[30:36])
-	//fmt.Println("Time Datalink Recording Started:", dt[36:44])
-	//fmt.Println("Collector Program Generic Number:", dt[44:50])
-	//fmt.Println("Type of Tracer:", dt[50:52])
 	return "201" + dt[31:36] + dt[37:43]
 }
 
 //AEor - AMA end of record
 func AEor(dt string) int {
-	//fmt.Println("Record Descriptor Word:", dt[0:8])
-	//fmt.Println("Hexadecimal Identifier:", dt[8:10])
-	//fmt.Println("Structure Identifier Code:", dt[10:14])
-	//fmt.Println("Call Type:", dt[14:18])
-	//fmt.Println("Recording Office Type:", dt[18:22])
-	//fmt.Println("Recording Office Identification:", dt[22:30])
-	//fmt.Println("Date Datalink Recording Completed:", dt[30:36])
-	//fmt.Println("Time Datalink Recording Completed:", dt[36:44])
-	//fmt.Println("Collector Program Generic Number:", dt[44:50])
-	//fmt.Println("Type of Tracer:", dt[50:54])
-	//fmt.Println("Count of Records:", dt[54:62])
 	rc, _ := strconv.Atoi(dt[54:62])
 	return rc
 }
 
 //IBor - IAD begin of record
 func IBor(dt string) string {
-	//fmt.Println("Block ID:", dt[0:2])
-	//fmt.Println("Block Sequence Counter:", dt[2:8])
-	//fmt.Println("Start Date of Datalink Recording:", dt[8:14])
-	//fmt.Println("Start Time of Datalink Recording:", dt[14:20])
-	//fmt.Println("Filler:", dt[20:24])
-	//fmt.Println("ESS Type:", dt[24:26])
 	return "20" + dt[8:20]
 }
 
 //IEor - IAD end of record
 func IEor(dt string) int {
-	//fmt.Println("Block ID:", dt[0:2])
-	//bc, _ := strconv.Atoi(dt[2:8])
-	//fmt.Println("Block Sequence Counter:", bc)
-	//fmt.Println("End Date of Datalink Recording:", dt[8:14])
-	//fmt.Println("End Time of Datalink Recording:", dt[14:20])
 	rc, _ := strconv.Atoi(dt[20:28])
-	//fmt.Println("Count of Records on Tape:", rc)
 	return rc
 }
 
