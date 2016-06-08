@@ -20,7 +20,7 @@ type block []ama.Redrec
 var cfg *cnf.Config
 
 func main() {
-	//os.Chdir("/home/vaxx/.apps/vload")
+	//os.Chdir("/home/vaxx/.apps/zload")
 	cnf.LoadConfig()
 	cfg = cnf.GetConfig()
 	os.Chdir(cfg.Path + "/tmp")
@@ -31,7 +31,7 @@ func main() {
 	defer db.Close()
 
 	f, _ := ioutil.ReadDir(".")
-	ds:=false
+	ds := false
 	for _, fn := range f {
 		if fget(fn.Name(), db) != true {
 			ds = true
@@ -46,7 +46,9 @@ func main() {
 		}
 		os.Remove(fn.Name())
 	}
-	if ds {size(db)}
+	if ds {
+		size(db)
+	}
 }
 
 func rama(fn string) (string, int, block) {
@@ -201,8 +203,8 @@ func set(buck, key, val string, db *bolt.DB) {
 }
 
 func size(db *bolt.DB) {
-	t:=time.Now()
-	fmt.Println("Size Start:",t.Format("15:04:05"))
+	t := time.Now()
+	fmt.Println("Size Start:", t.Format("15:04:05"))
 	days := map[string]int{}
 	defer db.Close()
 	db.View(func(tx *bolt.Tx) error {
@@ -235,5 +237,5 @@ func size(db *bolt.DB) {
 		}
 		return err
 	})
-	fmt.Println("Size Stop :",time.Now().Format("15:04:05"),time.Now().Sub(t))
+	fmt.Println("Size Stop :", time.Now().Format("15:04:05"), time.Now().Sub(t))
 }
