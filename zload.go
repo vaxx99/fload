@@ -21,6 +21,7 @@ var cfg *cnf.Config
 
 func main() {
 	//os.Chdir("/home/vaxx/.apps/zload")
+	fmt.Println("Zload Start:", time.Now().Format("02.01.2006 15:04:05"))
 	cnf.LoadConfig()
 	cfg = cnf.GetConfig()
 	os.Chdir(cfg.Path + "/tmp")
@@ -41,14 +42,13 @@ func main() {
 			rset(rp, db)
 			t1 := time.Now().Sub(t0)
 			log.Println(fn.Name(), mn[0:8], pr, "load", t1)
-		} else {
-			log.Println(fn.Name(), "skip...")
-		}
-		os.Remove(fn.Name())
+		} 
+	os.Remove(fn.Name())
 	}
 	if ds {
 		size(db)
 	}
+	fmt.Println("Zload End:", time.Now().Format("02.01.2006 15:04:05"))
 }
 
 func rama(fn string) (string, int, block) {
@@ -115,19 +115,19 @@ func rama(fn string) (string, int, block) {
 
 func rset(recs []ama.Redrec, db *bolt.DB) {
 	err := db.Update(func(tx *bolt.Tx) error {
-		bucket, err := tx.CreateBucketIfNotExists([]byte("data"))
-		if err != nil {
-			return err
-		}
 
 		for _, v := range recs {
+			bucket, err := tx.CreateBucketIfNotExists([]byte(v.Id[0:8]))
+			if err != nil {
+				return err
+			}
 			key := v.Id + ".Sw." + v.Sw + ".Hi." + v.Hi + ".Na." + v.Na + ".Nb." + v.Nb + ".Ds." + v.Ds + ".De." + v.De +
 				".Dr." + v.Dr + ".Ot." + v.Ot + ".It." + v.It + ".Du." + v.Du
 
 			err = bucket.Put([]byte(key), []byte(v.Id[0:6]))
 
 		}
-		return err
+		return nil
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -204,32 +204,31 @@ func set(buck, key, val string, db *bolt.DB) {
 
 func size(db *bolt.DB) {
 	t := time.Now()
-	fmt.Println("Size Start:", t.Format("15:04:05"))
+	fmt.Println("Start statistics:", t.Format("15:04:05"))
 	days := map[string]int{}
 	defer db.Close()
-	db.View(func(tx *bolt.Tx) error {
-		// Assume bucket exists and has keys
-		b := tx.Bucket([]byte("data"))
-		b.ForEach(func(k, v []byte) error {
-			days["ALL"]++
-			days[string(k)[0:6]]++
-			days[string(k)[0:8]]++
-			j := strings.Index(string(k), "Hi")
-			days[string(k)[0:8]+"."+string(k)[j+3:j+7]]++
-			if strings.Index(string(k), "Hi.0003") != -1 {
-				//days[string(k)[0:8]+".0001"]++
-			} else {
-				days[string(k)[0:8]+".0001"]++
-			}
+	bn := bname(db)
+	for _, buckn := range bn {
+		db.View(func(tx *bolt.Tx) error {
+			// Assume bucket exists and has keys
+			b := tx.Bucket([]byte(buckn))
+			b.ForEach(func(k, v []byte) error {
+				days["ALL"]++
+				days[string(k)[0:6]]++
+				days[string(k)[0:8]]++
+				j := strings.Index(string(k), "Hi")
+				days[string(k)[0:8]+"."+string(k)[j+3:j+7]]++
+				if strings.Index(string(k), "Hi.0003") != -1 {
+					//days[string(k)[0:8]+".0001"]++
+				} else {
+					days[string(k)[0:8]+".0001"]++
+				}
+				return nil
+			})
 			return nil
 		})
-		return nil
-	})
+	}
 	db.Update(func(tx *bolt.Tx) error {
-		err := tx.DeleteBucket([]byte("size"))
-		if err != nil {
-			return err
-		}
 		bucket, err := tx.CreateBucketIfNotExists([]byte("size"))
 		for k, v := range days {
 			kv := strconv.Itoa(v)
@@ -237,5 +236,19 @@ func size(db *bolt.DB) {
 		}
 		return err
 	})
-	fmt.Println("Size Stop :", time.Now().Format("15:04:05"), time.Now().Sub(t))
+	fmt.Println("Stop  statistics:", time.Now().Format("15:04:05"), time.Now().Sub(t))
+}
+
+func bname(db *bolt.DB) []string {
+	var bn []string
+	db.View(func(tx *bolt.Tx) error {
+		c := tx.Cursor()
+		for k, _ := c.First(); k != nil; k, _ = c.Next() {
+			if string(k)[0:4] != "file" && string(k)[0:4] != "size" {
+				bn = append(bn, string(k))
+			}
+		}
+		return nil
+	})
+	return bn
 }
