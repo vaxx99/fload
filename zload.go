@@ -115,10 +115,10 @@ func wize(db *bolt.DB) {
 }
 
 func main() {
-    os.Chdir("/home/vaxx/.apps/zload")
     fmt.Println("loader:", time.Now().Format("02.01.2006 15:04:05"))
     cnf.LoadConfig()
     cfg = cnf.GetConfig()
+    os.Chdir(cfg.Path)
     term(cfg)
     cnf.LoadConfig()
     cfg = cnf.GetConfig()
