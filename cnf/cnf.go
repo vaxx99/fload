@@ -10,6 +10,7 @@ import (
 type Config struct {
 	Term string
 	Path string
+	Port string
 }
 
 var (

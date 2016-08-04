@@ -37,7 +37,7 @@ func term(c *cnf.Config) {
     os.Mkdir(cfg.Path+"/bdb/"+cfg.Term, 0777)
     if time.Now().Format("20060102")[6:8] == "01" && time.Now().Format("150405")[0:2] == "06" {
 	fmt.Println("current period:", time.Now().Format("200601"))
-	s := `{"Path":"` + c.Path + `","Term":"` + time.Now().Format("200601") + `"}`
+	s := `{"Path":"` + c.Path + `","Port":"` + c.Port + `","Term":"` + time.Now().Format("200601") + `"}`
 	d := []byte(s)
 	os.Mkdir(cfg.Path+"/bdb/"+time.Now().Format("200601"), 0777)
 	err := ioutil.WriteFile("conf.json", d, 0644)
@@ -70,7 +70,7 @@ func wize(db *bolt.DB) {
     f, _ := ioutil.ReadDir(".")
     for _, fn := range f {
 	if fn.Name()[0:4] == "week" {
-	    wb := opendb(cfg.Path+"/bdb/"+cfg.Term+"/", fn.Name(), 0600)
+	    wb := opendb(cfg.Path+"/bdb/" + cfg.Term + "/", fn.Name(), 0600)
 	    bn := bname(wb)
 	    for _, buckn := range bn {
 		bckn[buckn] = fn.Name()
