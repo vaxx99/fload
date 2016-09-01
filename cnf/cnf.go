@@ -8,11 +8,9 @@ import (
 )
 
 type Config struct {
-    Host  string
-    Port  string
-    Path  string
-    Secs  int
-    Count int
+    Term string
+    Port string
+    Path string
 }
 
 var (
