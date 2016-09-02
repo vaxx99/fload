@@ -1,25 +1,16 @@
 {{define "home"}}
 <!DOCTYPE html>
 <html><head>
-<<<<<<< HEAD
     <title>Calls!</title>
     <link rel="stylesheet" type="text/css" href="css/zdash.css"/>
     <meta charset="UTF-8">
     <script>
     window.onkeypress = function(e) {
-=======
-	<title>Calls!</title>
-	<link rel="stylesheet" type="text/css" href="css/zdash.css"/>
-	<meta charset="UTF-8">
-	<script>
-	window.onkeypress = function(e) {
->>>>>>> 434c4007e5eba7298f6426b322ee022c802c35d4
     if ((e.which || e.keyCode) == 13) {
         f0.submit();
     }
 }
 </script>
-<<<<<<< HEAD
     </head>
     <body>
     <form id=f0 action="/form" method="post"></form>
@@ -32,19 +23,5 @@
     </tr>
     {{end}}
     </table></div>
-=======
-	</head>
-	<body>
-	<form id=f0 action="/form" method="post"></form>
-	<div class="dash0"><table><tr><td>Кількість записів: {{.All}}</td></tr></table></div>
-	<div class="dash1"><table>
-	{{range .Rec}}
-	<tr><td class="dt">{{.Date}}</td>
-	<td class="{{.Vi}}">{{.I0}}</td><td class="{{.Vi}}">{{.Pi}}</td>
-	<td class="{{.Va}}">{{.A0}}</td><td class="{{.Va}}">{{.Pa}}</td>
-	</tr>
-	{{end}}
-	</table></div>
->>>>>>> 434c4007e5eba7298f6426b322ee022c802c35d4
 </body></html>
 {{end}}

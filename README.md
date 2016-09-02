@@ -1,1 +1,1 @@
-# zload & zstat
+# zload
