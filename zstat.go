@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -46,6 +45,7 @@ func bname(ds, de string) (string, string) {
 		})
 		return nil
 	})
+
 	max := len(bn) - 1
 	buck := bn[max]
 	if len(ds) >= 8 {
@@ -117,6 +117,7 @@ func call(w http.ResponseWriter, r *http.Request) {
 	what := ama.Redrec{Sw: r.FormValue("sw"), Hi: r.FormValue("hi"), Na: r.FormValue("na"), Nb: r.FormValue("nb"),
 		Ds: r.FormValue("ds"), De: r.FormValue("de"), Dr: r.FormValue("dr"), Ot: r.FormValue("ot"),
 		It: r.FormValue("it"), Du: r.FormValue("du")}
+
 	if what != ses {
 		rc := 0
 		buck, dbn := bname(what.Ds, what.De)
@@ -124,7 +125,9 @@ func call(w http.ResponseWriter, r *http.Request) {
 		rc, _ = strconv.Atoi(tr.Rcn)
 		switch {
 		case rc < 5000:
-			log.Printf("%s\t%s\t%s\t%+v\n", r.RemoteAddr, tr.Rcn, tr.Rdr, what)
+			a, b := logt(time.Now())
+			c := &Logrec{b, r.RemoteAddr, tr.Rcn, tr.Rdr, what}
+			slogs(a, c)
 			t := template.New("call")
 			t, _ = template.ParseFiles("xmp/call.tmpl")
 			t.ExecuteTemplate(w, "call", tr)
@@ -159,14 +162,16 @@ func form(w http.ResponseWriter, r *http.Request) {
 	t.ExecuteTemplate(w, "form", ts.All)
 }
 
-func size(w http.ResponseWriter, r *http.Request) {
-	ts := dbsize()
-	fmt.Fprint(w, ts.All)
-}
-
 func stat(w http.ResponseWriter, r *http.Request) {
 	ts := dbsize()
-	tt, _ := json.Marshal(ts.Rec)
+	tt, _ := json.Marshal(ts)
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(tt)
+}
+
+func logs(w http.ResponseWriter, r *http.Request) {
+	ts := rlogs(time.Now().Format("20060102"))
+	tt, _ := json.Marshal(ts)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(tt)
 }
@@ -227,8 +232,8 @@ func kval(fs string) ama.Record {
 }
 
 func zstat() {
-	http.HandleFunc("/size", size)
 	http.HandleFunc("/stat", stat)
+	http.HandleFunc("/logs", logs)
 	http.HandleFunc("/", home)
 	http.HandleFunc("/form", form)
 	http.HandleFunc("/call", call)
@@ -246,6 +251,7 @@ func main() {
 	}
 	defer f.Close()
 	log.SetOutput(f)
+
 	cnf.LoadConfig()
 	cfg = cnf.GetConfig()
 	go zstat()
@@ -304,6 +310,7 @@ func dbsize() vrec {
 	})
 	return vct
 }
+
 func pers(s1, s2 string) (string, string) {
 	var sp, sv, pp string
 	z0, _ := strconv.Atoi(s1)
@@ -322,4 +329,64 @@ func pers(s1, s2 string) (string, string) {
 		sv = "bl"
 	}
 	return sp, sv
+}
+
+type Logrec struct {
+	Time  string
+	Raddr string
+	Count string
+	Rdur  string
+	What  ama.Redrec
+}
+
+func logt(t time.Time) (string, string) {
+	a := t.Format("15:04:05")
+	b := t.UnixNano() % 1e6 / 1e3
+	c := strconv.FormatInt(b, 10)
+	d := t.Format("20060102150405") + c
+	return d, a
+}
+
+func slogs(key string, recs *Logrec) {
+	db, _ := opendb(cfg.Path, "/bdb/"+cfg.Term+"/stat0.db", 600)
+	defer db.Close()
+	err := db.Update(func(tx *bolt.Tx) error {
+
+		bucket, err := tx.CreateBucketIfNotExists([]byte("logs"))
+		if err != nil {
+			return err
+		}
+		val, _ := json.Marshal(recs)
+		err = bucket.Put([]byte(key), val)
+
+		return nil
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func rlogs(s string) []Logrec {
+	var lg Logrec
+	var lgs []Logrec
+	db, _ := opendb(cfg.Path, "/bdb/"+cfg.Term+"/stat0.db", 600)
+	defer db.Close()
+
+	db.View(func(tx *bolt.Tx) error {
+		// Assume bucket exists and has keys
+		b := tx.Bucket([]byte("logs"))
+
+		b.ForEach(func(k, v []byte) error {
+			if strings.Contains(string(k), s) == true {
+				e := json.Unmarshal(v, &lg)
+				if e != nil {
+					log.Printf("Json logs error: %s", e)
+				}
+				lgs = append(lgs, lg)
+			}
+			return nil
+		})
+		return nil
+	})
+	return lgs
 }

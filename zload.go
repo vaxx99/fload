@@ -148,26 +148,26 @@ func main() {
 					}
 				}
 			}
-	    if len(w1) > 0 {
-		wb1 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week1.db", 0666)
-		rset(w1, wb1)
-		wb1.Close()
-	    }
-	    if len(w2) > 0 {
-		wb2 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week2.db", 0666)
-		rset(w2, wb2)
-		wb2.Close()
-	    }
-	    if len(w3) > 0 {
-		wb3 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week3.db", 0666)
-		rset(w3, wb3)
-		wb3.Close()
-	    }
-	    if len(w4) > 0 {
-		wb4 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week4.db", 0666)
-		rset(w4, wb4)
-		wb4.Close()
-	    }
+			if len(w1) > 0 {
+				wb1 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week1.db", 0666)
+				rset(w1, wb1)
+				wb1.Close()
+			}
+			if len(w2) > 0 {
+				wb2 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week2.db", 0666)
+				rset(w2, wb2)
+				wb2.Close()
+			}
+			if len(w3) > 0 {
+				wb3 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week3.db", 0666)
+				rset(w3, wb3)
+				wb3.Close()
+			}
+			if len(w4) > 0 {
+				wb4 := opendb(cfg.Path+"/bdb/"+cfg.Term, "week4.db", 0666)
+				rset(w4, wb4)
+				wb4.Close()
+			}
 			t1 := time.Now().Sub(t0)
 			log.Println(fn.Name(), mn[0:8], pr, "load", t1)
 		}
