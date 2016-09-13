@@ -100,10 +100,11 @@ func show(buck, dbn string, w ama.Redrec) hrec {
 			return nil
 		})
 	}
-	t2 := time.Now().Sub(t1)
+	t2 := float64(int64(time.Now().Sub(t1).Seconds()*100)) / 100
+	t3 := strconv.FormatFloat(t2,'g',2,64) + " сек."
 	tr := hrec{
 		Rcn: strconv.Itoa(i),
-		Rdr: t2.String(),
+		Rdr: t3,
 		Rec: block}
 	return tr
 }

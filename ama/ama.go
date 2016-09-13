@@ -10,17 +10,17 @@ type Record struct {
 }
 
 type Redrec struct {
-    Id string `json:"id"`
-    Sw string `json:"sw"`
-    Hi string `json:"hi"`
-    Na string `json:"na"`
-    Nb string `json:"nb"`
-    Ds string `json:"ds"`
-    De string `json:"de"`
-    Dr string `json:"dr"`
-    Ot string `json:"ot"`
-    It string `json:"it"`
-    Du string `json:"du"`
+	Id string `json:"id"`
+	Sw string `json:"sw"`
+	Hi string `json:"hi"`
+	Na string `json:"na"`
+	Nb string `json:"nb"`
+	Ds string `json:"ds"`
+	De string `json:"de"`
+	Dr string `json:"dr"`
+	Ot string `json:"ot"`
+	It string `json:"it"`
+	Du string `json:"du"`
 }
 
 func A9020(bcd, yy string) string {
