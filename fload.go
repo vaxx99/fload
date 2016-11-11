@@ -168,8 +168,8 @@ func main() {
 				rset(w4, wb4)
 				wb4.Close()
 			}
-			t1 := time.Now().Sub(t0)
-			log.Println(fn.Name(), mn[0:8], pr, "load", t1)
+			t1 := time.Now().Sub(t0).Seconds()
+			log.Printf("%20s %10s %8d %8s %8.2f\n",fn.Name(), mn[0:8], pr, "load", t1)
 		}
 		os.Remove(fn.Name())
 	}
