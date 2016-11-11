@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/boltdb/bolt"
-	"github.com/vaxx99/zload/ama"
-	"github.com/vaxx99/zload/bcd"
-	"github.com/vaxx99/zload/cnf"
+	"github.com/vaxx99/fload/ama"
+	"github.com/vaxx99/fload/bcd"
+	"github.com/vaxx99/fload/cnf"
 )
 
 type block []ama.Redrec
