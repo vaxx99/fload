@@ -111,7 +111,7 @@ func wize(db *bolt.DB) {
 		}
 		return err
 	})
-	fmt.Println("size:", days["ALL"], time.Now().Format("15:04:05"), time.Now().Sub(t))
+	fmt.Printf("%5s %10d %s %8.2f\n", "size:", days["ALL"], time.Now().Format("15:04:05"), time.Now().Sub(t).Seconds())
 }
 
 func main() {
@@ -169,7 +169,7 @@ func main() {
 				wb4.Close()
 			}
 			t1 := time.Now().Sub(t0).Seconds()
-			log.Printf("%20s %10s %8d %8s %8.2f\n",fn.Name(), mn[0:8], pr, "load", t1)
+			log.Printf("%20s %10s %8d %8s %8.2f\n", fn.Name(), mn[0:8], pr, "load", t1)
 		}
 		os.Remove(fn.Name())
 	}
@@ -181,7 +181,7 @@ func main() {
 
 func rama(fn string) (string, int, block) {
 	var recs block
-	sw, ft, mT, rc, j, file, e := bcd.Finfo(fn)
+	ft, mT, rc, j, file, e := bcd.Finfo(fn)
 	yy := mT[0:4]
 	bcd.Err(e)
 	defer file.Close()
@@ -198,19 +198,19 @@ func rama(fn string) (string, int, block) {
 			ad := bcd.H2bcd(data)
 
 			if ad[0:6] == "AA9020" {
-				b := ama.AA(ad, yy, sw)
+				b := ama.AA(ad, yy)
 				recs = append(recs, b)
 			}
 			if ad[0:6] == "AA9021" {
-				b := ama.AA(ad, yy, sw)
+				b := ama.AA(ad, yy)
 				recs = append(recs, b)
 			}
 			if ad[0:6] == "AA9025" {
-				b := ama.AA(ad, yy, sw)
+				b := ama.AA(ad, yy)
 				recs = append(recs, b)
 			}
 			if ad[0:6] == "AA9026" {
-				b := ama.AA(ad, yy, sw)
+				b := ama.AA(ad, yy)
 				recs = append(recs, b)
 			}
 			if j == 0 {
@@ -229,7 +229,7 @@ func rama(fn string) (string, int, block) {
 			bcd.Err(e)
 			ad := bcd.H2bcd(data)
 			if ad[0:6] == "AA0003" {
-				b := ama.AA(ad, yy, sw)
+				b := ama.AA(ad, yy)
 				recs = append(recs, b)
 			} else {
 				_, e = bcd.Read(file, 32)

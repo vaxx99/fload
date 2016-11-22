@@ -10,17 +10,17 @@ type Record struct {
 }
 
 type Redrec struct {
-    Id string `json:"id"`
-    Sw string `json:"sw"`
-    Hi string `json:"hi"`
-    Na string `json:"na"`
-    Nb string `json:"nb"`
-    Ds string `json:"ds"`
-    De string `json:"de"`
-    Dr string `json:"dr"`
-    Ot string `json:"ot"`
-    It string `json:"it"`
-    Du string `json:"du"`
+	Id string `json:"id"`
+	Sw string `json:"sw"`
+	Hi string `json:"hi"`
+	Na string `json:"na"`
+	Nb string `json:"nb"`
+	Ds string `json:"ds"`
+	De string `json:"de"`
+	Dr string `json:"dr"`
+	Ot string `json:"ot"`
+	It string `json:"it"`
+	Du string `json:"du"`
 }
 
 func A9020(bcd, yy string) string {
@@ -201,12 +201,13 @@ func A9051(bcd string) string {
 }
 
 //AA ...
-func AA(ad string, yr string, sw string) Redrec {
+func AA(ad string, yr string) Redrec {
 	var a Redrec
 	if ad[0:6] == "AA9020" {
-		a.Sw = sw
+		i, e := strconv.Atoi(ad[152:154])
+		a.Sw = strconv.Itoa(i)
 		a.Hi = ad[2:6]                   //Hexadecimal Identifier
-		i, e := strconv.Atoi(ad[18:20])  //Originating Phone Number Digits
+		i, e = strconv.Atoi(ad[18:20])   //Originating Phone Number Digits
 		a.Na = ad[36-i : 36]             //Originating Phone Number
 		i, e = strconv.Atoi(ad[36:38])   //Terminating Phone Number Digits
 		a.Nb = ad[70-i : 70]             //Terminating Phone Number
@@ -225,13 +226,14 @@ func AA(ad string, yr string, sw string) Redrec {
 		Err(e)
 	}
 	if ad[0:6] == "AA9021" {
-		a.Sw = sw
-		a.Hi = ad[2:6]                  //Hexadecimal Identifier
-		i, e := strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
-		a.Na = ad[36-i : 36]            //Originating Phone Number
-		i, e = strconv.Atoi(ad[36:38])  //Terminating Phone Number Digits
-		a.Nb = ad[70-i : 70]            //Terminating Phone Number
-		a.Ds = yr + ad[81:91]           //Date and Time of Charging Commencement
+		i, e := strconv.Atoi(ad[144:146])
+		a.Sw = strconv.Itoa(i)
+		a.Hi = ad[2:6]                 //Hexadecimal Identifier
+		i, e = strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
+		a.Na = ad[36-i : 36]           //Originating Phone Number
+		i, e = strconv.Atoi(ad[36:38]) //Terminating Phone Number Digits
+		a.Nb = ad[70-i : 70]           //Terminating Phone Number
+		a.Ds = yr + ad[81:91]          //Date and Time of Charging Commencement
 		//a.De = yr + ad[92:104]        //Date and Time of Call End
 		a.Dr = ad[106:110]               //Destination
 		a.Ot = ad[110:114]               //Outgoing Trunk Group
@@ -246,12 +248,13 @@ func AA(ad string, yr string, sw string) Redrec {
 	}
 
 	if ad[0:6] == "AA9025" {
-		a.Sw = sw
-		a.Hi = ad[2:6]                  //Hexadecimal Identifier
-		i, e := strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
-		a.Na = ad[36-i : 36]            //Originating Phone Number
-		i, e = strconv.Atoi(ad[36:38])  //Terminating Phone Number Digits
-		a.Nb = ad[70-i : 70]            //Terminating Phone Number
+		i, e := strconv.Atoi(ad[144:146])
+		a.Sw = strconv.Itoa(i)
+		a.Hi = ad[2:6]                 //Hexadecimal Identifier
+		i, e = strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
+		a.Na = ad[36-i : 36]           //Originating Phone Number
+		i, e = strconv.Atoi(ad[36:38]) //Terminating Phone Number Digits
+		a.Nb = ad[70-i : 70]           //Terminating Phone Number
 		a.Ds = yr + ad[81:91]
 		a.De = yr + ad[93:103]
 		a.Dr = ad[106:110]               //Destination
@@ -267,12 +270,13 @@ func AA(ad string, yr string, sw string) Redrec {
 		Err(e)
 	}
 	if ad[0:6] == "AA9026" {
-		a.Sw = sw
-		a.Hi = ad[2:6]                  //Hexadecimal Identifier
-		i, e := strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
-		a.Na = ad[36-i : 36]            //Originating Phone Number
-		i, e = strconv.Atoi(ad[36:38])  //Terminating Phone Number Digits
-		a.Nb = ad[70-i : 70]            //Terminating Phone Number
+		i, e := strconv.Atoi(ad[144:146])
+		a.Sw = strconv.Itoa(i)
+		a.Hi = ad[2:6]                 //Hexadecimal Identifier
+		i, e = strconv.Atoi(ad[18:20]) //Originating Phone Number Digits
+		a.Na = ad[36-i : 36]           //Originating Phone Number
+		i, e = strconv.Atoi(ad[36:38]) //Terminating Phone Number Digits
+		a.Nb = ad[70-i : 70]           //Terminating Phone Number
 		a.Ds = yr + ad[81:91]
 		//a.De = yr + ad[93:103]
 		a.Dr = ad[106:110]               //Destination
@@ -287,7 +291,7 @@ func AA(ad string, yr string, sw string) Redrec {
 		Err(e)
 	}
 	if ad[0:6] == "AA0003" {
-		a.Sw = sw
+		a.Sw = ""
 		a.Hi = ad[2:6]            //Hexadecimal Identifier
 		a.Ot = ad[6:10]           //Outgoing Trunk Group
 		a.It = ad[10:14]          //Incoming Trunk Group

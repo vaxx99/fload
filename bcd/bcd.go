@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vaxx99/vload/ama"
+	"github.com/vaxx99/fload/ama"
 )
 
 //Open file
@@ -55,17 +55,10 @@ func Next(dt byte) int {
 }
 
 //Finfo BCD
-func Finfo(fn string) (string, string, string, int, int, *os.File, error) {
+func Finfo(fn string) (string, string, int, int, *os.File, error) {
 	var j int
 	var mT string
-	sw := ""
 	ft := "NIL"
-	if fn[0:2] == "am" || fn[0:2] == "rv" {
-		sw = "0"
-	} else {
-		sw = "1"
-	}
-
 	rc := 0
 	file, e := os.Open(fn)
 	Err(e)
@@ -109,7 +102,7 @@ func Finfo(fn string) (string, string, string, int, int, *os.File, error) {
 		_, e = file.Seek(2048, 0)
 		Err(e)
 	}
-	return sw, ft, mT, rc, j, file, e
+	return ft, mT, rc, j, file, e
 }
 
 func Date(dt string) string {
@@ -124,7 +117,7 @@ func Date(dt string) string {
 //Err - error
 func Err(e error) {
 	if e != nil {
-		log.Println("BCD error:",e)
+		log.Println("BCD error:", e)
 		return
 	}
 }
